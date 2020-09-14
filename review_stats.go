@@ -81,7 +81,10 @@ func main() {
 
 	var results Results
 
-	json.Unmarshal(responseData, &results)
+	err = json.Unmarshal(responseData, &results)
+	if err != nil {
+		fmt.Print(err.Error())
+	}
 
 	var sum_seconds int
 
