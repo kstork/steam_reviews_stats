@@ -1,3 +1,5 @@
+// TODO: How do I deal with cursor pagination?
+
 package main
 
 import (
@@ -7,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 type Results struct {
@@ -52,18 +55,19 @@ type Author struct {
 	Last_Played             int    `json:"last_played"`
 }
 
-func GetReviews(appid int) (resp *http.Response, err error) {
-	url := fmt.Sprintf("https://store.steampowered.com/appreviews/%d?json=1&filter=updated&cursor=*&num_per_page=5", appid)
+func GetReviews(appid int, cursor string) (resp *http.Response, err error) {
+	url := fmt.Sprintf("https://store.steampowered.com/appreviews/%d?json=1&filter=updated&cursor=%v&num_per_page=100", appid, cursor)
 
-	// TODO: put that data into a struct, then start over and replace "cursor=*" the * with the id from "cursor" at the end of the response, do it as long as there are reviews and put it all into a nice struct, then give the struct back
 	// Steam API docs https://partner.steamgames.com/doc/store/getreviews
+	// TODO: Put all stuff here, including filling the structs, iterating through the cursors, and filtering out 0 minute playtime reviews! Get it out of the main function
+	// TODO: return the struct? Do I need pointers?
 
 	return http.Get(url)
 }
 
 func main() {
 
-	response, err := GetReviews(427520)
+	response, err := GetReviews(201510, "*")
 
 	if err != nil {
 		fmt.Print(err.Error())
@@ -82,8 +86,10 @@ func main() {
 	var sum_seconds int
 
 	for i := 0; i < len(results.Reviews); i++ {
-		sum_seconds += results.Reviews[i].Author.Playtime_Forever
-		//	fmt.Println("Text: " + strconv.Itoa((results.Reviews[i].Author.Playtime_Forever / 60)) + " minutes")
+		if !results.Reviews[i].Voted_Up {
+			sum_seconds += results.Reviews[i].Author.Playtime_Forever
+			fmt.Println("Text: " + strconv.Itoa((results.Reviews[i].Author.Playtime_Forever / 60)) + " minutes")
+		}
 	}
 
 	sum_minutes := sum_seconds / 60
