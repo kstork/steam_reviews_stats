@@ -23,3 +23,4 @@
 #### Other
 
 * Only count reviews from purchases (purchase_type = steam)
+* Only count reviews with non-zero playtimes
