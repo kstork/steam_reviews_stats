@@ -79,7 +79,15 @@ func main() {
 
 	json.Unmarshal(responseData, &results)
 
+	var sum_seconds int
+
 	for i := 0; i < len(results.Reviews); i++ {
-		fmt.Println("Text: " + results.Reviews[i].Review)
+		sum_seconds += results.Reviews[i].Author.Playtime_Forever
+		//	fmt.Println("Text: " + strconv.Itoa((results.Reviews[i].Author.Playtime_Forever / 60)) + " minutes")
 	}
+
+	sum_minutes := sum_seconds / 60
+	average_minutes := sum_minutes / len(results.Reviews)
+
+	fmt.Printf("Average playtime of reviews is about %d minutes. \n", average_minutes)
 }
