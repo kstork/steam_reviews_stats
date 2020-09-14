@@ -12,6 +12,8 @@ import (
 	"strconv"
 )
 
+// TODO: Check how other projects split their files. Can I put these in another file to shorten this?
+
 type Results struct {
 	Success       int           `json:"success"`
 	Query_Summary Query_Summary `json:"query_summary"`
@@ -67,6 +69,8 @@ func GetReviews(appid int, cursor string) (resp *http.Response, err error) {
 
 func main() {
 
+	// TODO: Can I get the appid via user input?
+
 	response, err := GetReviews(201510, "*")
 
 	if err != nil {
@@ -87,6 +91,8 @@ func main() {
 	}
 
 	var sum_seconds int
+
+	// TODO: Put this in functions too, both for positive and negative reviews
 
 	for i := 0; i < len(results.Reviews); i++ {
 		if !results.Reviews[i].Voted_Up {
